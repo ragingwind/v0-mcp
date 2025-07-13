@@ -1,12 +1,15 @@
 {
   "name": "v0-mcp",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "MCP server v0 for adding components and dependencies to projects",
   "main": "dist/index.js",
   "type": "module",
   "bin": {
     "v0-mcp": "./dist/index.js"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
