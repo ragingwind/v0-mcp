@@ -1,9 +1,3 @@
-import { config } from "dotenv";
-
-const envPath = process.env.NODE_ENV !== "production" ? ".env.local" : ".env";
-
-config({ path: envPath });
-
 interface V0ClientConfig {
   apiKey?: string;
   baseUrl?: string;

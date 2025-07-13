@@ -1,6 +1,6 @@
 {
   "name": "v0-mcp",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "MCP server v0 for adding components and dependencies to projects",
   "main": "dist/index.js",
   "type": "module",

@@ -6,10 +6,11 @@ import {
   type CallToolRequest,
 } from "@modelcontextprotocol/sdk/types.js";
 import { createComponent } from "./generate.js";
+import packageJson from '../package.json' with { type: "json" };
 
 const server = new Server({
   name: "v0-mcp",
-  version: "1.0.0",
+  version: packageJson.version,
 });
 
 server.setRequestHandler(ListToolsRequestSchema, async () => {
@@ -81,7 +82,7 @@ server.setRequestHandler(
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("v0-mcp server started");
+  console.error(`v0-mcp server ${packageJson.version} started`);
 }
 
 main().catch((error) => {

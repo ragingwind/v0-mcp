@@ -6,8 +6,6 @@ This tool is built as an MCP (Model Context Protocol) server for using the v0 SD
 
 ## Environment Variables
 
-Create a `.env.local` file in the root directory with the following variables:
-
 ```bash
 # Required: Your v0.dev API key
 V0_API_KEY=your_v0_api_key_here
