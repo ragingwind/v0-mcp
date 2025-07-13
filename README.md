@@ -75,3 +75,7 @@ Use mcp inspection or run code directly. You need to create `./env.local` and up
 ```sh
 npx tsx ./src/cli.ts --chatid=your-chat-id --prompt=your-prompt
 ```
+
+License
+
+@MIT
