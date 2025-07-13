@@ -1,0 +1,39 @@
+{
+  "name": "v0-mcp",
+  "version": "0.0.1",
+  "description": "MCP server v0 for adding components and dependencies to projects",
+  "main": "dist/index.js",
+  "type": "module",
+  "bin": {
+    "v0-mcp": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "mcp": "node dist/mcp.js",
+    "lint": "biome lint .",
+    "format": "biome format .",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.0.5",
+    "@types/node": "^20.10.5",
+    "typescript": "^5.3.3",
+    "vitest": "^3.2.4"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "keywords": [
+    "v0",
+    "mcp",
+    "vercel"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.4.0",
+    "commander": "^14.0.0",
+    "dotenv": "^17.2.0"
+  }
+}
