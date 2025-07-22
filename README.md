@@ -74,6 +74,11 @@ Use mcp inspection or run code directly. You need to create `./env.local` and up
 npx tsx ./src/cli.ts --chatid=your-chat-id --prompt=your-prompt
 ```
 
+## References
+
+- https://v0.dev/docs/v0-platform-api/quickstart
+- https://github.com/vercel/v0-sdk
+
 ## License
 
 @MIT

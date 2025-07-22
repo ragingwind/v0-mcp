@@ -1,5 +1,4 @@
-import { log } from 'console';
-import { enhancePrompt, sendMessage } from './sdk.js';
+import { enhancePrompt, chats } from './sdk.js';
 
 interface ExtractedData {
   think: string;
@@ -63,8 +62,8 @@ Here is the prompt to generate a component:`;
 
 export async function createComponent(chatId: string, prompt: string) {
   const { prompt: enhancedPrompt } = await enhancePrompt(prompt);
-  const completedPrompt = `${CREATE_COMPONENT_SYSTEM_PROMPT}\n${enhancedPrompt}`;
-  const { files, text } = await sendMessage(chatId, completedPrompt);
+  const message = `${CREATE_COMPONENT_SYSTEM_PROMPT}\n${enhancedPrompt}`;
+  const { files, text } = await chats.sendMessage({ chatId, message });
   const { think, codeProject } = extractV0Text(text);
 
   return {
