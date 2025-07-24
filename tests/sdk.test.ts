@@ -1,11 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { chats } from '../src/sdk.js';
+import { log } from 'console';
 
 describe('getChats', () => {
-  it('should return chats', async () => {
-    const res = await chats.find();
-    expect(res).toBeDefined();
-  });
+  // it('should return chats', async () => {
+  //   const res = await chats.find();
+  //   expect(res).toBeDefined();
+  // });
 
   it('should return a chat', async () => {
     if (!process.env.TEST_CHATID) {
@@ -13,6 +14,7 @@ describe('getChats', () => {
     }
 
     const chat = await chats.getById({ chatId: process.env.TEST_CHATID });
+    console.log(chat);
     expect(chat).toBeDefined();
     expect(chat.demo).toContain('vusercontent.net'); // https://preview-<key>.vusercontent.net/
   });

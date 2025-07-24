@@ -21,7 +21,6 @@ export function extractV0Text(text: string): ExtractedData {
     if (!text || typeof text !== 'string') {
       throw new Error('Invalid input: text must be a non-empty string');
     }
-    // 정규표현식 매칭
     const match = V0_TEXT_EXTRACT_PATTERN.exec(text);
 
     if (!match) {
@@ -30,7 +29,6 @@ export function extractV0Text(text: string): ExtractedData {
 
     const [, thinkingContent, codeProjectContent] = match;
 
-    // 결과 검증
     if (!codeProjectContent) {
       throw new Error('CodeProject section is empty');
     }
@@ -48,6 +46,7 @@ export function extractV0Text(text: string): ExtractedData {
   }
 }
 
+// @FIXME: move to system prompt
 const CREATE_COMPONENT_SYSTEM_PROMPT = `MUST ONLY CREATE COMPONENT CODE
 Creates a new React component using v0 API based on the provided description
 1) exclusively for component generation only
