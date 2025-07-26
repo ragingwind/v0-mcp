@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { extractV0Text } from '../src/generate.js';
+import { extractV0Text } from '../src/sdk.js';
 
 describe('extractV0Text', () => {
   it('should extract the thinking and code project from the text', () => {
