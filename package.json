@@ -1,6 +1,6 @@
 {
   "name": "v0-mcp",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "description": "MCP server v0 for adding components and dependencies to projects",
   "main": "dist/index.js",
   "type": "module",
@@ -18,7 +18,8 @@
     "mcp": "node dist/mcp.js",
     "lint": "biome lint .",
     "format": "biome format .",
-    "test": "vitest"
+    "test": "vitest",
+    "inspect": "source .env.local && npx @modelcontextprotocol/inspector"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.0.5",
@@ -40,6 +41,7 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^0.4.0",
     "commander": "^14.0.0",
-    "v0-sdk": "^0.3.1"
+    "v0-sdk": "^0.3.1",
+    "zod": "^4.0.10"
   }
 }
