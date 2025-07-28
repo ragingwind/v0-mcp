@@ -1,7 +1,7 @@
-const { config } = require('dotenv');
+import { config } from 'dotenv';
 config({ path: '.env.local' });
 
-const { spawn } = require('child_process');
+import { spawn } from 'node:child_process';
 
 const child = spawn('node', ['./dist/mcp.js'], {
   env: {
@@ -22,7 +22,7 @@ child.on('close', (code) => {
   console.log('Process exited with code:', code);
 });
 
-// MCP 초기화 메시지 보내기
+// Send initialization message to the child process
 child.stdin.write(
   JSON.stringify({
     jsonrpc: '2.0',
@@ -36,5 +36,15 @@ child.stdin.write(
         version: '1.0.0',
       },
     },
+  }) + '\n'
+);
+
+// Send tools/list message to get available tools
+child.stdin.write(
+  JSON.stringify({
+    jsonrpc: '2.0',
+    id: 2,
+    method: 'tools/list',
+    params: {},
   }) + '\n'
 );

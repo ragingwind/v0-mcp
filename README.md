@@ -71,7 +71,7 @@ claude mcp add v0-mcp -e V0_API_KEY=your_api_key -- npx tsx ./src/index.ts
 Use mcp inspection or run code directly. You need to create `./env.local` and update with your API key.
 
 ```sh
-npx tsx ./src/cli.ts --chatid=your-chat-id --prompt=your-prompt
+npx tsx ./mcp.test.ts
 ```
 
 ## References

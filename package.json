@@ -16,18 +16,23 @@
     "dev": "tsc --watch",
     "start": "node dist/index.js",
     "mcp": "node dist/mcp.js",
-    "lint": "biome lint .",
-    "format": "biome format .",
-    "test": "vitest",
+    "lint": "prettier --check .",
+    "format": "prettier --write .",
+    "test": "env-cmd -f .env.local -- tsx",
     "inspect": "source .env.local && npx @modelcontextprotocol/inspector"
   },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.4.0",
+    "env-cmd": "^10.1.0",
+    "v0-sdk": "^0.3.1",
+    "zod": "^4.0.10"
+  },
   "devDependencies": {
-    "@biomejs/biome": "^2.0.5",
     "@types/node": "^20.10.5",
     "dotenv": "^17.2.0",
     "shx": "^0.4.0",
     "typescript": "^5.3.3",
-    "vitest": "^3.2.4"
+    "tsx": "^4.20.3"
   },
   "engines": {
     "node": ">=22.0.0"
@@ -37,11 +42,5 @@
     "mcp",
     "vercel"
   ],
-  "license": "MIT",
-  "dependencies": {
-    "@modelcontextprotocol/sdk": "^0.4.0",
-    "commander": "^14.0.0",
-    "v0-sdk": "^0.3.1",
-    "zod": "^4.0.10"
-  }
+  "license": "MIT"
 }
