@@ -69,6 +69,7 @@ claude mcp add v0 -e V0_API_KEY=v1:xxx -- npx v0-mcp
 for project
 
 claude mcp add v0 -s project -e V0_API_KEY=v1:xxx -- npx v0-mcp
+
 or for development
 
 claude mcp add v0 -e V0_API_KEY=v1:xxx -- npx tsx ./src/index.ts
