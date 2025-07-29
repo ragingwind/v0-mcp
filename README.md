@@ -12,6 +12,9 @@ V0_API_KEY=your_v0_api_key_here
 
 # Optional: Custom base URL (defaults to https://api.v0.dev/v1)
 V0_BASE_URL=https://api.v0.dev/v1
+
+# Optional: Set model id
+V0_MODEL_ID=v0-1.5-sm
 ```
 
 ### Getting your v0 API Key
@@ -59,11 +62,16 @@ Add this configuration to your MCP client (e.g., Claude Desktop, Continue, etc.)
 ### Claude Code
 
 ```sh
-claude mcp add v0-mcp -e V0_API_KEY=your_api_key -- npx v0-mcp
+for local
 
-or
+claude mcp add v0 -e V0_API_KEY=v1:xxx -- npx v0-mcp
 
-claude mcp add v0-mcp -e V0_API_KEY=your_api_key -- npx tsx ./src/index.ts
+for project
+
+claude mcp add v0 -s project -e V0_API_KEY=v1:xxx -- npx v0-mcp
+or for development
+
+claude mcp add v0 -e V0_API_KEY=v1:xxx -- npx tsx ./src/index.ts
 ```
 
 ## How to test
