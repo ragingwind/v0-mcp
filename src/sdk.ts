@@ -1,54 +1,31 @@
 import { createClient } from 'v0-sdk';
+import { fetchV0Data } from './lib.js';
+
+const V0_MODEL_ID = process.env.V0_MODEL_ID ?? 'v0-1.5-sm';
 
 const v0 = createClient({
   apiKey: process.env.V0_API_KEY,
 });
 
-interface FetcherParams {
-  query?: Record<string, string>;
-  body?: unknown;
-  headers?: Record<string, string>;
-}
-
-interface ChatResponse {
+export interface ChatResponse {
   chatId: string;
   chatName?: string;
 }
 
-interface SourceFile {
+export interface SourceFile {
   lang: string;
   file: string;
   source?: string;
 }
 
-async function fetch_v0(endpoint: string, method: string, params: FetcherParams = {}) {
-  const queryString = params.query ? `?${new URLSearchParams(params.query).toString()}` : '';
-  const url = endpoint + queryString;
-  const hasBody = method !== 'GET' && params.body;
-  const headers: Record<string, string> = {
-    Authorization: `Bearer ${process.env.V0_API_KEY}`,
-    ...params.headers,
-  };
-
-  if (hasBody) {
-    headers['Content-Type'] = 'application/json';
-  }
-
-  const res = await fetch(url, {
-    method,
-    headers,
-    body: hasBody ? JSON.stringify(params.body) : undefined,
-  });
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`HTTP ${res.status}: ${text}`);
-  }
-  return res.json();
+export interface CreateV0ComponentOptions {
+  createComponent?: boolean;
+  enhancePrompt?: boolean;
 }
 
 // @TODO support prev options
 export async function enhancePrompt(prompt: string) {
-  return await fetch_v0('https://v0.dev/chat/api/prompt-enhancement', 'POST', {
+  return await fetchV0Data('https://v0.dev/chat/api/prompt-enhancement', 'POST', {
     body: {
       prompt,
       prev: [],
@@ -113,75 +90,54 @@ export async function getFileContent(
     }));
 }
 
-interface ExtractedData {
-  think: string;
-  codeProject: string;
+const SYSTEM_PROMPT_CREATE_COMPONENT = (
+  create: boolean
+) => `MUST GENERATE CREATE COMPONENT CODE FOLLOWING THE RULES BELOW:
+- SHOULD creates a new React component using v0 API based on the provided description. exclusively action for component generation only
+- ${
+  create
+    ? 'MUST create and add a new component file with the name of the component.'
+    : 'MUST generate code only for the component without creating a new file.'
 }
-
-const V0_TEXT_EXTRACT_PATTERN =
-  /(?:<Thinking>\s*([\s\S]*?)\s*<\/Thinking>)?\s*(?:<CodeProject[^>]*>\s*([\s\S]*?)\s*<\/CodeProject>)?/i;
-
-function cleanCode(code: string) {
-  return code
-    .replace(/^```\w+\s+file=["']?[^"'\s]+["']?\s*\n/, '')
-    .replace(/^```\w*\s*\n?/, '')
-    .replace(/\n?```\s*$/, '')
-    .trim();
-}
-
-export function extractV0Text(text: string): ExtractedData {
-  try {
-    if (!text || typeof text !== 'string') {
-      throw new Error('Invalid input: text must be a non-empty string');
-    }
-    const match = V0_TEXT_EXTRACT_PATTERN.exec(text);
-
-    if (!match) {
-      throw new Error('No match found');
-    }
-
-    const [, thinkingContent, codeProjectContent] = match;
-
-    if (!codeProjectContent) {
-      throw new Error('CodeProject section is empty');
-    }
-
-    return {
-      think: thinkingContent ? thinkingContent.trim() : '',
-      codeProject: cleanCode(codeProjectContent),
-    };
-  } catch (error) {
-    console.error(error);
-    return {
-      think: '',
-      codeProject: '',
-    };
-  }
-}
-
-// @FIXME: move to system prompt
-const CREATE_COMPONENT_SYSTEM_PROMPT = `MUST ONLY CREATE COMPONENT CODE
-Creates a new React component using v0 API based on the provided description
-1) exclusively for component generation only
-2) do not for modifying existing components or non-component code.
-1) only create component code
-2) do not modify existing code.
-3) do not create example or demo code for app and demo file.
-4) must make a sing file for a component.
-5) add detail description for component and function
+- NEVER modify existing components or non-component code.
+- NEVER generate example, or demo page, or app to demonstrate how app and demo files work for this component.
+- MUST create a single file for each component.
+- SHOULD add detail description comment for new component and function
+- MUST newst component code in the text field of the response.
 ---------------------------------------------------------------------------------
 Here is the prompt to generate a component:`;
 
-export async function createComponent(chatId: string, prompt: string) {
-  const { prompt: enhancedPrompt } = await enhancePrompt(prompt);
-  const message = `${CREATE_COMPONENT_SYSTEM_PROMPT}\n${enhancedPrompt}`;
-  const { files, text } = await v0.chats.sendMessage({ chatId, message });
-  const { think, codeProject } = extractV0Text(text);
+export async function createV0Component(
+  chatId: string,
+  prompt: string,
+  options: CreateV0ComponentOptions = {}
+): Promise<{
+  text: string;
+  preview: string;
+  files: SourceFile[];
+}> {
+  const { prompt: updatedPrompt } = options?.enhancePrompt
+    ? await enhancePrompt(prompt)
+    : { prompt };
+  const message = `${SYSTEM_PROMPT_CREATE_COMPONENT(
+    options?.createComponent ?? true
+  )}\n\n${updatedPrompt}`;
+  const { text, demo, files } = await v0.chats.sendMessage({
+    chatId,
+    message,
+    modelConfiguration: {
+      modelId: V0_MODEL_ID as any,
+    },
+  });
 
   return {
-    chatId,
-    files,
-    think,
-    codeProject,
+    text: text,
+    preview: demo ?? '',
+    files:
+      files?.map((file) => ({
+        lang: file.lang,
+        file: file.meta.file,
+        source: file.source,
+      })) || [],
   };
 }
